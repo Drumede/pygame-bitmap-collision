@@ -29,22 +29,27 @@ player_height = 50
 player_color = RED
 
 image_path = "level.png"  # Replace with your image file
-image_surface = pygame.image.load(image_path).convert_alpha() # Use convert_alpha() for images
+image_surface = pygame.image.load(image_path) # Use convert_alpha() for images
 
-pixel_res = 8
+pixel_res = 4
 colors = []
 img_width = image_surface.get_width()
-img_height = image_surface.get_width()
+img_height = image_surface.get_height()
 grid_width = int(img_width / pixel_res)
 grid_height = int(img_height / pixel_res)
-print(grid_width*8)
+
 for x in range(grid_width):
     colors.append([])
     print(x)
     print(colors)
     for y in range(grid_height):
         print(y*pixel_res)
-        colors[x] += image_surface.get_at((x*pixel_res,y*pixel_res))
+        colors[x].append(image_surface.get_at((x*pixel_res,y*pixel_res)))
+        if colors[x][y] == BLACK:
+            colors[x][y] = 1
+        else:
+            colors[x][y] = 0
+
 print(colors)
 # Game loop
 while running:
@@ -61,6 +66,11 @@ while running:
     screen.fill(DARK_GREEN)  # Fill background
     screen.blit(image_surface,(0,0))
     # Draw other game elements here
+
+    for x in range(grid_width):
+        for y in range(grid_height):
+            px_color = BLACK if colors[x][y] == 1  else WHITE
+            pygame.draw.rect(screen, px_color, (x*pixel_res*4, y*pixel_res*4, pixel_res*4, pixel_res*4))  # Draw player
 
     # Update display
     pygame.display.flip()
